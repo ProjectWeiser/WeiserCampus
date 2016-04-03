@@ -1,17 +1,12 @@
 package map;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.shounakk.utdallas.Helper;
 import com.example.shounakk.utdallas.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -44,6 +39,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
+import map.location.Place;
 import map.slidinguppanellibrary.HeaderAdapter;
 import map.slidinguppanellibrary.LockableRecyclerView;
 import map.slidinguppanellibrary.SlidingUpPanelLayout;
@@ -85,8 +81,17 @@ public class MapSearchFragment extends Fragment implements GoogleApiClient.Conne
     private boolean mIsNeedLocationUpdate = true;
 
     // Data for the selected item and initial place
-    private MapSearchListItemData mSelectedItem, mInitialPlace;
+    private Place mSelectedItem, mInitialPlace;
 
+    private ArrayList<Place> mPlaces;
+
+    FilterState state;
+
+    private enum FilterState {
+        NONE,
+        BUILDING,
+        SUBPLACE
+    }
 
     public static MapSearchFragment newInstance(LatLng location) {
         MapSearchFragment f = new MapSearchFragment();
@@ -100,8 +105,12 @@ public class MapSearchFragment extends Fragment implements GoogleApiClient.Conne
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map_search, container, false);
 
+        state = FilterState.BUILDING;
+
         // Initialize markers list
         mMarkers = new ArrayList<>();
+
+        mPlaces = new ArrayList<>();
 
         // Set up listview and set to it can't overscroll
         mListView = (LockableRecyclerView) rootView.findViewById(android.R.id.list);
@@ -113,7 +122,7 @@ public class MapSearchFragment extends Fragment implements GoogleApiClient.Conne
         mSlidingUpPanelLayout.setEnableDragViewTouchEvents(true);
 
         // Set the height of the map and panellayout
-        int mapHeight = getResources().getDimensionPixelSize(R.dimen.map_height);
+        int mapHeight = (int) getResources().getDimension(R.dimen.scrollable_padding);
         mSlidingUpPanelLayout.setPanelHeight(500);
         mSlidingUpPanelLayout.setScrollableView(mListView, mapHeight);
 
@@ -140,7 +149,7 @@ public class MapSearchFragment extends Fragment implements GoogleApiClient.Conne
         mSelectedClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setUnfiltered();
+                setUnfiltered(true);
             }
         });
 
@@ -226,8 +235,10 @@ public class MapSearchFragment extends Fragment implements GoogleApiClient.Conne
                         moveToLocation(latLng, false);
 
                         // Set the list to be unfiltered
-                        if(mSelectedItemView.getVisibility() == View.VISIBLE)
-                            setUnfiltered();
+                        if(mSelectedItemView.getVisibility() == View.GONE)
+                            setUnfiltered(false);
+                        else
+                            setUnfiltered(true);
                     }
                 });
 
@@ -235,7 +246,7 @@ public class MapSearchFragment extends Fragment implements GoogleApiClient.Conne
                 mMap.setOnMarkerClickListener(this);
 
                 // Set up the place markers
-                setUpMarkers();
+                setUpPlaces();
             }
         }
     }
@@ -331,7 +342,7 @@ public class MapSearchFragment extends Fragment implements GoogleApiClient.Conne
             @Override
             public void run() {
                 if (mMap != null && moveCamera) {
-                    mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(mLocation, 16f)));
+                    mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(mLocation, Helper.BUILDING_ZOOM)));
                 }
             }
         });
@@ -346,9 +357,6 @@ public class MapSearchFragment extends Fragment implements GoogleApiClient.Conne
             mHeaderAdapter.hideSpace();
         }
         mTransparentView.setVisibility(View.INVISIBLE);
-        if (mMap != null) {
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(16f), 1000, null);
-        }
         mListView.setScrollingEnabled(false);
     }
 
@@ -397,31 +405,24 @@ public class MapSearchFragment extends Fragment implements GoogleApiClient.Conne
 
     @Override
     public void onItemClicked(int position) {
+        if(position == 0)
+            return;
+
         int i = 0;
 
         // If there are items
-        if(mHeaderAdapter.getItemCount() > 0) {
 
-            // Loop through each item
-            for(MapSearchListItemData item : mHeaderAdapter.getData()) {
-
-                // Set each marker related to the respective item to the image of "not here"
-                mMarkers.get(i).setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location));
-                i++;
-            }
-        }
-
-        // Set the marker related to the item clicked to image of "here"
-        mMarkers.get(position - 1).setIcon(BitmapDescriptorFactory.fromResource(R.drawable.ic_action_location_2));
 
         // collapse pane
         mSlidingUpPanelLayout.collapsePane();
 
         // Move camera to marker related to item pressed
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mHeaderAdapter.getItem(position).getLocation(), 16f), 350, null);
+        //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mHeaderAdapter.getItem(position).getLocation(), Helper.BUILDING_ZOOM), 350, null);
 
-        // Filter to item selected
-        setFiltered(mHeaderAdapter.getItem(position));
+        if(mHeaderAdapter.getSelectedPlace() != null)
+            setBuildingFilter(mHeaderAdapter.getSelectedPlace().getSubPlaces().get(position - 1));
+        else
+            setBuildingFilter(mPlaces.get(position - 1));
     }
 
     @Override
@@ -429,10 +430,10 @@ public class MapSearchFragment extends Fragment implements GoogleApiClient.Conne
 
     }
 
-    public void setUpMarkers() {
+    public void setUpPlaces() {
 
         // Loop through each item
-        for(MapSearchListItemData item : mHeaderAdapter.getData()) {
+        for(Place item : mHeaderAdapter.getData()) {
             int resId = 0;
             Marker marker;
 
@@ -452,28 +453,41 @@ public class MapSearchFragment extends Fragment implements GoogleApiClient.Conne
             // Add marker to markers list
             if(marker != null)
                 mMarkers.add(marker);
+
+            item.setMarker(marker);
+
+            for(Place subPlace : item.getSubPlaces()) {
+                marker = mMap.addMarker(new MarkerOptions().position(subPlace.getLocation()).title(subPlace.getNickname()).icon(BitmapDescriptorFactory.fromResource(resId)));
+                subPlace.setMarker(marker);
+                subPlace.setMarkerVisible(false);
+            }
         }
     }
 
-    public ArrayList<MapSearchListItemData> setData() {
+    public ArrayList<Place> setData() {
         // Temp
         String description = "From eateries to meeting spaces, to a range of departments within student affairs, the Student Union is the hub of campus activity. Stop by to eat, have fun with friends, and become a part of the Comet community.";
 
-        ArrayList<MapSearchListItemData> data = new ArrayList<>();
-        data.add(new MapSearchListItemData("Student Union", "The SU", 3, "Nearly Empty", new LatLng(32.986739, -96.748907), true, description));
-        data.add(new MapSearchListItemData("Eric Jonnson School of Engineering", "ECS", 6, "Very Crowded", new LatLng(32.986314, -96.750435), false, description));
-        data.add(new MapSearchListItemData("Arts and Technology", "ATEC", 3, "Nearly Empty", new LatLng(32.986090, -96.747614), false, description));
-        data.add(new MapSearchListItemData("Eugene McDermott Library", "MC", 6, "Lightly Crowded", new LatLng(32.987025, -96.747631), false, description));
-        data.add(new MapSearchListItemData("Naveen Jindal School of Management", "JSOM", 4, "Moderately Crowded", new LatLng(32.985137, -96.747724), false, description));
-        data.add(new MapSearchListItemData("The Activity Center", "The AC", 3, "Nearly Empty", new LatLng(32.985277, -96.749809), false, description));
-        data.add(new MapSearchListItemData("Hoblitzelle Hall", "HH", 6, "Very Crowded", new LatLng(32.986958, -96.751624), false, description));
+        mPlaces.add(new Place("Student Union", "The SU", 3, "Nearly Empty", new LatLng(32.986739, -96.748907), true, description, false));
+        mPlaces.add(new Place("Eric Jonnson School of Engineering", "ECS", 6, "Very Crowded", new LatLng(32.986314, -96.750435), false, description, false));
+        mPlaces.add(new Place("Arts and Technology", "ATEC", 3, "Nearly Empty", new LatLng(32.986090, -96.747614), false, description, false));
+        mPlaces.add(new Place("Eugene McDermott Library", "MC", 6, "Lightly Crowded", new LatLng(32.987025, -96.747631), false, description, false));
+        mPlaces.add(new Place("Naveen Jindal School of Management", "JSOM", 4, "Moderately Crowded", new LatLng(32.985137, -96.747724), false, description, false));
+        mPlaces.add(new Place("The Activity Center", "The AC", 3, "Nearly Empty", new LatLng(32.985277, -96.749809), false, description, false));
+        mPlaces.add(new Place("Hoblitzelle Hall", "HH", 6, "Very Crowded", new LatLng(32.986958, -96.751624), false, description, false));
+
+        ArrayList<Place> subPlaces = new ArrayList<>();
+        subPlaces.add(new Place("TI Auditorium", "TI", 6, "Very Crowded", new LatLng(32.986104, -96.750481), false, description, true));
+        subPlaces.add(new Place("ECS Counselors Office", "ECO", 6, "Very Crowded", new LatLng(32.986455, -96.750646), false, description, true));
+
+        mPlaces.get(1).setSubPlaces(subPlaces);
 
         // TODO: Pull data from firebase sorted by distance
 
-        return data;
+        return mPlaces;
     }
 
-    public void setFiltered(MapSearchListItemData item) {
+    public void setLeafFiltered(Place item) {
 
         // Animate the list to the bottom if it's visible
         if(mSlidingContainer.getVisibility() == View.VISIBLE)
@@ -504,10 +518,9 @@ public class MapSearchFragment extends Fragment implements GoogleApiClient.Conne
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-
-        // Loop throug each marker
+        // Loop through each marker
         int i = 1;
-        for(Marker m : mMarkers) {
+       /* for(Marker m : mMarkers) {
 
             // If the marker is equal to the one clicked
             if(m.equals(marker)) {
@@ -516,51 +529,75 @@ public class MapSearchFragment extends Fragment implements GoogleApiClient.Conne
                 setFiltered(mHeaderAdapter.getItem(i));
 
                 // Animate and zoom to the marker
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mHeaderAdapter.getItem(i).getLocation(), 16f), 350, null);
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mHeaderAdapter.getItem(i).getLocation(), Helper.BUILDING_ZOOM), 350, null);
                 return true;
             }
 
             i++;
-        }
+        }*/
 
-        // TODO: Check if the marker clicked is related to the item filtered. If so, move to place
+        for(Place place : mPlaces) {
+            if(place.getMarker().getId().equals(marker.getId())) {
+                setBuildingFilter(place);
+                break;
+            }
+            for(Place subPlace : place.getSubPlaces()) {
+                if(subPlace.getMarker().getId().equals(marker.getId())) {
+                    setBuildingFilter(subPlace);
+                    break;
+                }
+            }
+        }
 
         return false;
     }
 
-    public void setUnfiltered() {
+    public void setUnfiltered(boolean animate) {
 
-        // Set the slide_down animation to a variable
-        Animation down = AnimationUtils.loadAnimation(getContext(),
-                R.anim.slide_down);
+        mHeaderAdapter.setState(false);
+        mHeaderAdapter.setSelectedPlace(null);
+        mHeaderAdapter.notifyDataSetChanged();
 
-        // Set an animationlistener to the animation
-        down.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
+        if(animate) {
+            // Set the slide_down animation to a variable
+            Animation down = AnimationUtils.loadAnimation(getContext(),
+                    R.anim.slide_down);
 
-            }
+            // Set an animationlistener to the animation
+            down.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
+                }
 
-                // Switch visibility of selected item and list
-                mSlidingContainer.setVisibility(View.VISIBLE);
-                mSelectedItemView.setVisibility(View.GONE);
+                @Override
+                public void onAnimationEnd(Animation animation) {
 
-                // Animate the list to slide up
-                Animation up = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up);
-                mSlidingContainer.startAnimation(up);
-            }
+                    // Switch visibility of selected item and list
+                    mSlidingContainer.setVisibility(View.VISIBLE);
+                    mSelectedItemView.setVisibility(View.GONE);
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
+                    // Animate the list to slide up
+                    Animation up = AnimationUtils.loadAnimation(getContext(), R.anim.slide_up);
+                    mSlidingContainer.startAnimation(up);
+                }
 
-            }
-        });
+                @Override
+                public void onAnimationRepeat(Animation animation) {
 
-        // Start the animation
-        mSelectedItemView.startAnimation(down);
+                }
+            });
+
+            // Start the animation
+            mSelectedItemView.startAnimation(down);
+
+        }
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Helper.UTD_CENTER_LATLNG, Helper.BUILDING_ZOOM), 350, null);
+
+        for(Place place : mPlaces) {
+            place.setSubPlacesVisible(false);
+        }
     }
 
     private void animateDown() {
@@ -642,10 +679,55 @@ public class MapSearchFragment extends Fragment implements GoogleApiClient.Conne
         locationBar.startAnimation(animation);
     }
 
-    private void moveToPlace(MapSearchListItemData item) {
+    private void moveToPlace(Place item) {
 
         // TODO: replace places fragment with new place via passing the place id | Close this fragment
         //Toast.makeText(getContext(), "Moving to Place: " + item.getName(), 2);
     }
 
+    public void setBuildingFilter(final Place place) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(place.getLocation()), 350, new GoogleMap.CancelableCallback() {
+                    @Override
+                    public void onFinish() {
+                        ArrayList<Place> places;
+                        if(place.isSubPlace()) {
+                            places = new ArrayList<Place>();
+                            places.add(place);
+                        }
+                        else
+                            places = mPlaces;
+
+                        for(Place b : places) {
+                            if(b == place) {
+                                // Filter to item selected
+                                if(b.getSubPlaces().isEmpty()) {
+                                    Log.d("DEBUG", "Empty");
+                                    setLeafFiltered(b);
+                                }
+                                else {
+                                    b.setSubPlacesVisible(true);
+                                    mHeaderAdapter.setSelectedPlace(b);
+                                    mHeaderAdapter.setState(true);
+                                    mHeaderAdapter.notifyDataSetChanged();
+                                    mHeaderAdapter.notifyItemChanged(0);
+                                    Log.d("DEBUG", "Not empty");
+                                }
+                            }
+                            else
+                                b.setSubPlacesVisible(false);
+                        }
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLocation(), Helper.SUBPLACE_ZOOM));
+                    }
+
+                    @Override
+                    public void onCancel() {
+
+                    }
+                });
+            }
+        }, 500);
+    }
 }

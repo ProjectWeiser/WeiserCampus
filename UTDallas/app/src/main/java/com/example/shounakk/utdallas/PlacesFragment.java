@@ -70,7 +70,7 @@ public class PlacesFragment extends Fragment implements SwipeRefreshLayout.OnRef
         swipeRefreshLayout.setOnRefreshListener(this);
 
         // Add MapSearchPreviewFragment to container
-        Fragment msfp = MapSearchPreviewFragment.newInstance(new LatLng(32.9861675, -96.7482097), false);
+        Fragment msfp = MapSearchPreviewFragment.newInstance(Helper.UTD_CENTER_LATLNG, false);
         getFragmentManager().beginTransaction().add(R.id.mapPreviewContainer, msfp).commit();
 
         return view;

@@ -12,16 +12,39 @@ import com.example.shounakk.utdallas.R;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import map.MapSearchListItemData;
+import map.location.Place;
 
 public class HeaderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
-    private ArrayList<MapSearchListItemData> mData;
+    private ArrayList<Place> mPlaces;
+    private Place selectedPlace;
 
     private LayoutInflater mLayoutInflater;
 
-    private boolean mIsSpaceVisible = true;
+    private enum FilteredState {
+        FILTERED,
+        UNFILTERED
+    }
+
+    private FilteredState state = FilteredState.UNFILTERED;
+
+    private boolean mIsSpaceVisible;
+
+    public void setState(boolean filtered) {
+        if(filtered)
+            state = FilteredState.FILTERED;
+        else
+            state = FilteredState.UNFILTERED;
+    }
+
+    public void setSelectedPlace(Place place) {
+        selectedPlace = place;
+    }
+
+    public Place getSelectedPlace() {
+        return selectedPlace;
+    }
 
     public interface ItemClickListener {
         void onItemClicked(int position);
@@ -29,22 +52,28 @@ public class HeaderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private WeakReference<ItemClickListener> mCallbackRef;
 
-    public HeaderAdapter(Context ctx, ArrayList<MapSearchListItemData> data, ItemClickListener listener) {
+    public HeaderAdapter(Context ctx, ArrayList<Place> data, ItemClickListener listener) {
         mLayoutInflater = LayoutInflater.from(ctx);
-        mData = data;
+        mPlaces = data;
         mCallbackRef = new WeakReference<>(listener);
         this.hideSpace();
-
     }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
             //inflate your layout and pass it to view holder
             View v = mLayoutInflater.inflate(R.layout.map_search_list_item, parent, false);
-            return new MapSearchListItemNoFilter(v);
+            return new MapSearchListItem(v);
         } else if (viewType == TYPE_HEADER) {
-            View v = mLayoutInflater.inflate(R.layout.transparent_header_view, parent, false);
+            View v;
+            if(selectedPlace != null) {
+                v = mLayoutInflater.inflate(R.layout.filtered_header_view, parent, false);
+            }
+            else {
+                v = mLayoutInflater.inflate(R.layout.unfiltered_header_view, parent, false);
+            }
             return new HeaderItem(v);
         }
         return null;
@@ -52,21 +81,30 @@ public class HeaderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof MapSearchListItemNoFilter) {
-            MapSearchListItemData dataItem = getItem(position);
-            ((MapSearchListItemNoFilter) holder).mName.setText(dataItem.getName());
-            ((MapSearchListItemNoFilter) holder).mTimeWalk.setText(dataItem.getTimeWalk() + " minute walk");
-            ((MapSearchListItemNoFilter) holder).mCrowdStatus.setText(dataItem.getCrowdStatus());
-            ((MapSearchListItemNoFilter) holder).mPosition = position;
+        if (holder instanceof MapSearchListItem) {
+            Place dataItem = getItem(position);
+
+            ((MapSearchListItem) holder).mName.setText(dataItem.getName());
+            ((MapSearchListItem) holder).mTimeWalk.setText(dataItem.getTimeWalk() + " minute walk");
+            ((MapSearchListItem) holder).mCrowdStatus.setText(dataItem.getCrowdStatus());
+            ((MapSearchListItem) holder).mPosition = position;
         } else if (holder instanceof HeaderItem) {
-            ((HeaderItem) holder).mSpaceView.setVisibility(mIsSpaceVisible ? View.VISIBLE : View.GONE);
+//            ((HeaderItem) holder).mSpaceView.setVisibility(mIsSpaceVisible ? View.VISIBLE : View.GONE);
+            if(selectedPlace != null) {
+                //((HeaderItem) holder).mTitle.setText(selectedPlace.getName());
+                //((HeaderItem) holder).mDescription.setText(selectedPlace.getDescription());
+            }
+
             ((HeaderItem) holder).mPosition = position;
         }
     }
 
     @Override
     public int getItemCount() {
-        return mData.size() + 1;
+        if(selectedPlace == null)
+            return mPlaces.size() + 1;
+        else
+            return selectedPlace.getSubPlaces().size() + 1;
     }
 
     @Override
@@ -77,17 +115,20 @@ public class HeaderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return TYPE_ITEM;
     }
 
-    public MapSearchListItemData getItem(int position) {
-        return mData.get(position - 1);
+    public Place getItem(int position) {
+        if(selectedPlace == null)
+            return mPlaces.get(position - 1);
+        else
+            return selectedPlace.getSubPlaces().get(position - 1);
     }
 
     // Custom class to populate the ListItems
-    class MapSearchListItemNoFilter extends HeaderItem {
+    class MapSearchListItem extends HeaderItem {
         private TextView mName;
         private TextView mTimeWalk;
         private TextView mCrowdStatus;
 
-        public MapSearchListItemNoFilter(View itemView) {
+        public MapSearchListItem(View itemView) {
             super(itemView);
             mName = (TextView) itemView.findViewById(R.id.placeNameItem);
             mTimeWalk = (TextView) itemView.findViewById(R.id.walkDistanceItem);
@@ -98,12 +139,20 @@ public class HeaderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     class HeaderItem extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         View mSpaceView;
+        TextView mTitle;
+        TextView mDescription;
         int mPosition;
 
         public HeaderItem(View itemView) {
             super(itemView);
-            mSpaceView = itemView.findViewById(R.id.space);
+           // mSpaceView = itemView.findViewById(R.id.space);
+            setUpViews();
             itemView.setOnClickListener(this);
+        }
+
+        public void setUpViews() {
+            mTitle = (TextView) itemView.findViewById(R.id.filteredTitleList);
+            mDescription = (TextView) itemView.findViewById(R.id.filteredBodyList);
         }
 
         @Override
@@ -126,7 +175,7 @@ public class HeaderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         notifyItemChanged(0);
     }
 
-    public ArrayList<MapSearchListItemData> getData() {
-        return mData;
+    public ArrayList<Place> getData() {
+        return mPlaces;
     }
 }

@@ -37,46 +37,16 @@
                 android:id="@+id/transparentView"
                 android:background="@android:color/white"
                 android:layout_width="fill_parent"
-                android:layout_height="@dimen/map_height"
+                android:layout_height="0dp"
                 android:layout_alignParentTop="true"/>
 
             <View
                 android:id="@+id/whiteSpaceView"
                 android:background="@android:color/white"
-                android:layout_marginTop="@dimen/map_height"
+                android:layout_marginTop="0dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="0dp" />
 
-            <LinearLayout
-                android:orientation="horizontal" android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@drawable/filter_border"
-                android:id="@+id/slidingFilterHead"
-                android:layout_above="@android:id/list">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/listed_places"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="10dp" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:src="@drawable/ic_action_filter"
-                    android:background="@null"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="3"
-                    android:paddingRight="10dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/filter"/>
-            </LinearLayout>
 
             <map.slidinguppanellibrary.LockableRecyclerView
                 android:id="@android:id/list"

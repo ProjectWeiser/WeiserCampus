@@ -5,7 +5,14 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Helper {
+
+    public static float BUILDING_ZOOM = 16f;
+    public static float SUBPLACE_ZOOM = 19f;
+    public static LatLng UTD_CENTER_LATLNG = new LatLng(32.9861675, -96.7482097);
+
     /**
      * This method converts dp unit to equivalent pixels, depending on device density.
      *
