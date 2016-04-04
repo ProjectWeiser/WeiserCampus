@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,6 +29,8 @@ public class GroupsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    ViewPager mPager;
 
     /**
      * Use this factory method to create a new instance of
@@ -62,7 +67,55 @@ public class GroupsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_groups, container, false);
+        View v = inflater.inflate(R.layout.fragment_groups, container, false);
+
+        FeaturedPagerAdapter adapter = new FeaturedPagerAdapter();
+        mPager = (ViewPager) v.findViewById(R.id.featuredpager);
+        mPager.setAdapter(adapter);
+
+        mPager.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
+        mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                mPager.getParent().requestDisallowInterceptTouchEvent(true);
+            }
+        });
+
+        return v;
+    }
+
+    class FeaturedPagerAdapter extends PagerAdapter {
+
+        public Object instantiateItem(ViewGroup collection, int position) {
+
+            int resId = 0;
+            switch (position) {
+                case 0:
+                    resId = R.id.banner1;
+                    break;
+                case 1:
+                    resId = R.id.banner2;
+                    break;
+            }
+            return getActivity().findViewById(resId);
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            return arg0 == ((View) arg1);
+        }
     }
 
 

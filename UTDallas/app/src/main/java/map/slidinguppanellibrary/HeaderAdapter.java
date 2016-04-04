@@ -18,7 +18,7 @@ public class HeaderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
     private ArrayList<Place> mPlaces;
-    private Place selectedPlace;
+    public Place selectedPlace;
 
     private LayoutInflater mLayoutInflater;
 

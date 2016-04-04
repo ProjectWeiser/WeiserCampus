@@ -32,6 +32,9 @@
 
         <activity android:name="map.MapSearchActivity" >
         </activity>
+        <activity android:name=".PopUp"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

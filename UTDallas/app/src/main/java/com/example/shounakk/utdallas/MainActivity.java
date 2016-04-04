@@ -1,14 +1,17 @@
 package com.example.shounakk.utdallas;
 
+import android.app.Activity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -16,8 +19,8 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSelectedListener, ViewPager.PageTransformer {
 
-    TabsPagerAdapter adapter;
-    ViewPager pager;
+    public TabsPagerAdapter adapter;
+    public ViewPager pager;
     TabLayout tabLayout;
 
     @Override
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
         setContentView(R.layout.activity_main);
 
         // Create TabsPagerAdapter
-        adapter = new TabsPagerAdapter(getSupportFragmentManager());
+        adapter = new TabsPagerAdapter(getSupportFragmentManager(), null, null);
 
         // Create Pager and set Adapter
         pager = (ViewPager) findViewById(R.id.pager);
@@ -104,5 +107,12 @@ public class MainActivity extends AppCompatActivity implements TabLayout.OnTabSe
     @Override
     public void transformPage(View page, float position) {
         Log.d("UTDALLAS", "Page changed");
+    }
+
+    public void showGroup() {
+        pager.setAdapter(null);
+        TabsPagerAdapter adapter = new TabsPagerAdapter(getSupportFragmentManager(), null, new UXFragment());
+        pager.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 }
