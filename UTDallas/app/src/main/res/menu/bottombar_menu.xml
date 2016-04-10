@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bb1"
+        android:icon="@drawable/ic_near_me"
+        android:title="Places"/>
+    <item
+        android:id="@+id/bb2"
+        android:icon="@drawable/ic_group"
+        android:title="Places"/>
+    <item
+        android:id="@+id/bb3"
+        android:icon="@drawable/ic_event"
+        android:title="Places"/>
+    <item
+        android:id="@+id/bb4"
+        android:icon="@drawable/ic_account_circle"
+        android:title="Places"/>
+    <item
+        android:id="@+id/bb5"
+        android:icon="@drawable/ic_more_horiz"
+        android:title="Places"/>
+</menu>
