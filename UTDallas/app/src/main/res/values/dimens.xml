@@ -1,5 +1,11 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="map_height">0dp</dimen>
+    <dimen name="scrollable_padding">40dp</dimen>
+    <dimen name="map_selecteditem_height">361dp</dimen>
+    <dimen name="paralax_offset">0dp</dimen>
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="card_margin_bottom">12dp</dimen>
 </resources>

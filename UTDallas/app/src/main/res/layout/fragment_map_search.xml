@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/lib/com.example.shounakk"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/mat_white_1000">
+
+    <map.slidinguppanellibrary.SlidingUpPanelLayout
+        android:id="@+id/slidingLayout"
+        android:gravity="bottom"
+        app:shadowHeight="0dp"
+        app:paralaxOffset="@dimen/paralax_offset"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <FrameLayout
+            android:gravity="top"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/mat_white_1000"
+            android:id="@+id/mapContainerFrame">
+
+            <RelativeLayout
+                android:id="@+id/mapContainer"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/map_selecteditem_height" />
+        </FrameLayout>
+
+        <RelativeLayout
+            android:id="@+id/slidingContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/mat_white_1000">
+
+            <View
+                android:id="@+id/transparentView"
+                android:background="@android:color/white"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_alignParentTop="true"/>
+
+            <View
+                android:id="@+id/whiteSpaceView"
+                android:background="@android:color/white"
+                android:layout_marginTop="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp" />
+
+
+            <map.slidinguppanellibrary.LockableRecyclerView
+                android:id="@android:id/list"
+                android:cacheColorHint="@android:color/white"
+                android:drawSelectorOnTop="true"
+                android:dividerHeight="@dimen/divider_height"
+                android:divider="@android:color/darker_gray"
+                android:background="@android:color/transparent"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@id/transparentView"
+                android:smoothScrollbar="false" />
+
+        </RelativeLayout>
+    </map.slidinguppanellibrary.SlidingUpPanelLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:layout_marginTop="@dimen/map_selecteditem_height"
+            android:background="@color/mat_white_1000"
+            android:id="@+id/selectedItemView">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/filter_border"
+                android:clickable="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/selected_place"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/filteredClear"
+                    android:text="@string/clear"
+                    android:layout_weight="3"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:clickable="true"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@drawable/filter_border"
+                android:clickable="true"
+                android:id="@+id/filteredItem">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/filteredTitle"
+                    android:textSize="20dp"
+                    android:gravity="center_vertical"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:clickable="false"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/filteredBody"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="5dp"
+                    android:textSize="15dp"
+                    android:ellipsize="end"
+                    android:maxLines="5"
+                    android:clickable="false"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+    <!-- more code here -->
+</RelativeLayout>

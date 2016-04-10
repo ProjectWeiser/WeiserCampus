@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/tab" />
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="tabIcon"
+        android:layout_centerInParent="true"
+        android:alpha="0.65" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="tabText"
+        android:textColor="@color/mat_white_1000"
+        android:layout_centerInParent="true"
+        android:paddingTop="36dp"
+        android:text="Test"
+        android:alpha="0"
+        android:textSize="14sp" />
+
+</RelativeLayout>
