@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.shounakk.utdallas.PlacesFragment">
+    tools:context=".pages.PlacesFragment">
 
-    <pl.droidsonroids.gif.GifImageView
+    <ImageView
+        android:id="@+id/bgImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/drone_dallas"
         android:scaleType="centerCrop"
         android:tint="#88000000" />
 
@@ -16,8 +16,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
+        android:paddingLeft="36dp"
+        android:paddingRight="36dp"
         android:id="@+id/locationBar"
         android:elevation="4dp">
 
@@ -64,15 +64,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="40dp"
-                android:paddingRight="40dp">
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginTop="48dp">
+                    android:layout_marginTop="48dp"
+                    android:paddingLeft="36dp"
+                    android:paddingRight="36dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -100,8 +100,10 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="48dp"
-                    android:orientation="vertical">
+                    android:layout_marginTop="96dp"
+                    android:orientation="vertical"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp">
                     <android.support.v7.widget.CardView
                         xmlns:card_view="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/infoCard"
@@ -113,356 +115,35 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:padding="16dp"
                             android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:text="Info"
-                                android:id="@+id/infoHeader"
-                                android:textColor="#60000000"
-                                android:textSize="14sp"
-                                android:textAllCaps="true"
-                                android:layout_marginBottom="12dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="From eateries to meeting spaces, the Student Union is the hub of campus activity. Stop by to eat, have fun with friends, and join the community."
-                                android:id="@+id/infoText"
-                                android:textColor="#bb000000" />
-                        </LinearLayout>
-                    </android.support.v7.widget.CardView>
-
-                    <android.support.v7.widget.CardView
-                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/nearbyCard"
-                        android:layout_gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        card_view:cardCornerRadius="4dp"
-                        android:layout_marginBottom="@dimen/card_margin_bottom">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="16dp"
-                            android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:text="Nearby"
-                                android:id="@+id/nearbyHeader"
-                                android:textColor="#60000000"
-                                android:textSize="14sp"
-                                android:textAllCaps="true"
-                                android:layout_marginBottom="12dp" />
-
                             <LinearLayout
-                                android:orientation="vertical"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:layout_marginBottom="12dp">
-
-                                    <ImageView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:src="@drawable/ic_local_dining"
-                                        android:background="@drawable/orange_circle"
-                                        android:padding="6dp" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="The Pub"
-                                        android:layout_marginLeft="16dp"
-                                        android:layout_gravity="center_vertical"
-                                        android:textColor="#bb000000" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal" >
-
-                                    <ImageView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:src="@drawable/ic_bubble_chart"
-                                        android:background="@drawable/green_circle"
-                                        android:padding="6dp" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Radio UTD"
-                                        android:layout_marginLeft="16dp"
-                                        android:layout_gravity="center_vertical"
-                                        android:textColor="#bb000000" />
-                                </LinearLayout>
-                            </LinearLayout>
-                        </LinearLayout>
-                    </android.support.v7.widget.CardView>
-
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="150dp"
-                        android:id="@+id/mapPreviewContainer"
-                        android:layout_marginBottom="12dp"
-                        >
-
-                    </FrameLayout>
-
-                    <android.support.v7.widget.CardView
-                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/eventsCard"
-                        android:layout_gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        card_view:cardCornerRadius="4dp"
-                        android:layout_marginBottom="@dimen/card_margin_bottom">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="16dp"
-                            android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:text="Events"
-                                android:id="@+id/eventsHeader"
-                                android:textColor="#60000000"
-                                android:textSize="14sp"
-                                android:textAllCaps="true"
-                                android:layout_marginBottom="12dp" />
-
-                            <LinearLayout
-                                android:orientation="vertical"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
+                                android:padding="16dp"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:layout_marginBottom="12dp">
+                                    android:textAppearance="?android:attr/textAppearanceLarge"
+                                    android:text="Info"
+                                    android:id="@+id/infoHeader"
+                                    android:textColor="#60000000"
+                                    android:textSize="14sp"
+                                    android:textAllCaps="true"
+                                    android:layout_marginBottom="12dp" />
 
-                                    <TextView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:text="19"
-                                        android:background="@drawable/red_circle"
-                                        android:padding="6dp"
-                                        android:textColor="#ffffff"
-                                        android:textSize="18sp"
-                                        android:textAlignment="gravity"
-                                        android:gravity="center" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="ACM Meeting"
-                                        android:layout_marginLeft="16dp"
-                                        android:layout_gravity="center_vertical"
-                                        android:textColor="#bb000000" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
+                                <TextView
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:text="26"
-                                        android:background="@drawable/blue_circle"
-                                        android:padding="6dp"
-                                        android:textColor="#ffffff"
-                                        android:textSize="18sp"
-                                        android:textAlignment="gravity"
-                                        android:gravity="center" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="HackUTD"
-                                        android:layout_marginLeft="16dp"
-                                        android:layout_gravity="center_vertical"
-                                        android:textColor="#bb000000" />
-
-                                </LinearLayout>
+                                    android:text="From eateries to meeting spaces, the Student Union is the hub of campus activity. Stop by to eat, have fun with friends, and join the community."
+                                    android:id="@+id/infoText"
+                                    android:textColor="#bb000000" />
                             </LinearLayout>
-                        </LinearLayout>
-                    </android.support.v7.widget.CardView>
 
-                    <android.support.v7.widget.CardView
-                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/nearbyCard2"
-                        android:layout_gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        card_view:cardCornerRadius="4dp"
-                        android:layout_marginBottom="@dimen/card_margin_bottom">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="16dp"
-                            android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:text="Nearby"
-                                android:id="@+id/nearbyHeader2"
-                                android:textColor="#60000000"
-                                android:textSize="14sp"
-                                android:textAllCaps="true"
-                                android:layout_marginBottom="12dp" />
-
-                            <LinearLayout
-                                android:orientation="vertical"
+                            <FrameLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:layout_marginBottom="12dp">
-
-                                    <ImageView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:src="@drawable/ic_local_dining"
-                                        android:background="@drawable/orange_circle"
-                                        android:padding="6dp" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="The Pub"
-                                        android:layout_marginLeft="16dp"
-                                        android:layout_gravity="center_vertical"
-                                        android:textColor="#bb000000" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal" >
-
-                                    <ImageView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:src="@drawable/ic_bubble_chart"
-                                        android:background="@drawable/green_circle"
-                                        android:padding="6dp" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Radio UTD"
-                                        android:layout_marginLeft="16dp"
-                                        android:layout_gravity="center_vertical"
-                                        android:textColor="#bb000000" />
-                                </LinearLayout>
-                            </LinearLayout>
-                        </LinearLayout>
-                    </android.support.v7.widget.CardView>
-
-                    <android.support.v7.widget.CardView
-                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/eventsCard2"
-                        android:layout_gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        card_view:cardCornerRadius="4dp"
-                        android:layout_marginBottom="@dimen/card_margin_bottom">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="16dp"
-                            android:orientation="vertical">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:text="Events"
-                                android:id="@+id/eventsHeader2"
-                                android:textColor="#60000000"
-                                android:textSize="14sp"
-                                android:textAllCaps="true"
-                                android:layout_marginBottom="12dp" />
-
-                            <LinearLayout
-                                android:orientation="vertical"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal"
-                                    android:layout_marginBottom="12dp">
-
-                                    <TextView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:text="19"
-                                        android:background="@drawable/red_circle"
-                                        android:padding="6dp"
-                                        android:textColor="#ffffff"
-                                        android:textSize="18sp"
-                                        android:textAlignment="gravity"
-                                        android:gravity="center" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="ACM Meeting"
-                                        android:layout_marginLeft="16dp"
-                                        android:layout_gravity="center_vertical"
-                                        android:textColor="#bb000000" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:layout_width="36dp"
-                                        android:layout_height="36dp"
-                                        android:text="26"
-                                        android:background="@drawable/blue_circle"
-                                        android:padding="6dp"
-                                        android:textColor="#ffffff"
-                                        android:textSize="18sp"
-                                        android:textAlignment="gravity"
-                                        android:gravity="center" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="HackUTD"
-                                        android:layout_marginLeft="16dp"
-                                        android:layout_gravity="center_vertical"
-                                        android:textColor="#bb000000" />
-
-                                </LinearLayout>
-                            </LinearLayout>
+                                android:layout_height="100dp"
+                                android:id="@+id/mapPreviewContainer"/>
                         </LinearLayout>
                     </android.support.v7.widget.CardView>
                 </LinearLayout>

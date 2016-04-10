@@ -19,11 +19,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.shounakk.utdallas.ATEC;
 import com.example.shounakk.utdallas.Helper;
 import com.example.shounakk.utdallas.MainActivity;
 import com.example.shounakk.utdallas.R;
-import com.example.shounakk.utdallas.TabsPagerAdapter;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -545,14 +543,6 @@ public class MapSearchFragment extends Fragment implements GoogleApiClient.Conne
             i++;
         }*/
 
-        if(mHeaderAdapter.selectedPlace != null) {
-            getFragmentManager().beginTransaction().remove(this).commit();
-            ((MainActivity) getActivity()).pager.setAdapter(null);
-            ((MainActivity) getActivity()).adapter = new TabsPagerAdapter(getFragmentManager(), new ATEC(), null);
-            ((MainActivity) getActivity()).pager.setAdapter(((MainActivity) getActivity()).adapter);
-            ((MainActivity) getActivity()).adapter.notifyDataSetChanged();
-            return true;
-        }
 
         for(Place place : mPlaces) {
             if(place.getMarker().getId().equals(marker.getId())) {
