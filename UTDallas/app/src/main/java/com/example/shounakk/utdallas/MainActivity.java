@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         List<Fragment> fragments = new ArrayList<>(5);
 
-        fragments.add(new PlacesFragment());
+        //fragments.add(new PlacesFragment());
         fragments.add(new GroupsFragment());
         fragments.add(new EventsFragment());
         fragments.add(new ProfileFragment());
