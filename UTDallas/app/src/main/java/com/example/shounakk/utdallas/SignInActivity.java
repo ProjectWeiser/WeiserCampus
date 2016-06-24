@@ -1,5 +1,6 @@
 package com.example.shounakk.utdallas;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
@@ -18,10 +19,11 @@ public class SignInActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton)findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email");
+        //loginButton.setReadPermissions("email");
 
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -39,5 +41,11 @@ public class SignInActivity extends AppCompatActivity{
                 Toast.makeText(getApplicationContext(), "Facebook login onError", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }
