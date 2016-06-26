@@ -8,3 +8,6 @@
 /app/src/main/res/values/credentials.xml
 /app/google-services.json
 /keystore.properties
+.idea
+/UTDallas.iml
+/

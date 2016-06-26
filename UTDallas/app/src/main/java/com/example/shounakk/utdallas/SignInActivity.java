@@ -54,7 +54,6 @@ public class SignInActivity extends AppCompatActivity{
                     // User is signed out
                     //startActivity(new Intent(SignInActivity.this, SignInActivity.class));
                     Toast.makeText(SignInActivity.this, "signed out", Toast.LENGTH_SHORT).show();
-
                 }
 
             }
@@ -63,7 +62,7 @@ public class SignInActivity extends AppCompatActivity{
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-
+                handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
             @Override
@@ -85,6 +84,7 @@ public class SignInActivity extends AppCompatActivity{
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
+        Toast.makeText(SignInActivity.this, "handleFacebookAccessToken method called", Toast.LENGTH_SHORT).show();
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -96,8 +96,9 @@ public class SignInActivity extends AppCompatActivity{
                         if (!task.isSuccessful()) {
                             Toast.makeText(SignInActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
-
-                        // ...
+                        else {
+                            startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                        }
                     }
                 });
     }

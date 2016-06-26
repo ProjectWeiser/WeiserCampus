@@ -42,11 +42,12 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseUser = mFirebaseAuth.getCurrentUser();
         if (mFirebaseUser == null) {
+            Toast.makeText(MainActivity.this, "Main Activity but user is not signed in.", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(this, SignInActivity.class));
             finish();
             return;
         } else {
-            //we're signed in
+            Toast.makeText(MainActivity.this, "Main Activity && signed in.", Toast.LENGTH_SHORT).show();
         }
 
         List<Fragment> fragments = new ArrayList<>(5);

@@ -7,17 +7,17 @@
     <item
         android:id="@+id/bb2"
         android:icon="@drawable/ic_group"
-        android:title="Places"/>
+        android:title="Groups"/>
     <item
         android:id="@+id/bb3"
         android:icon="@drawable/ic_event"
-        android:title="Places"/>
+        android:title="Events"/>
     <item
         android:id="@+id/bb4"
         android:icon="@drawable/ic_account_circle"
-        android:title="Places"/>
+        android:title="Profile"/>
     <item
         android:id="@+id/bb5"
         android:icon="@drawable/ic_more_horiz"
-        android:title="Places"/>
+        android:title="More"/>
 </menu>
