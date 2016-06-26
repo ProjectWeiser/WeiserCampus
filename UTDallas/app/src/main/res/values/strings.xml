@@ -1,12 +1,10 @@
 <resources>
     <string name="app_name">UT Dallas</string>
-
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="listed_places">Listed Places</string>
     <string name="filter">Filter</string>
     <string name="clear">Clear</string>
     <string name="selected_place">Selected Place</string>
     <string name="events">Events</string>
+    <string name="facebook_app_id">553965054775718</string>
+    <string name="fb_login_protocol_scheme">fb553965054775718</string>
 </resources>
