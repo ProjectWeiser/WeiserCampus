@@ -48,14 +48,10 @@ public class SignInActivity extends AppCompatActivity{
                 if (user != null) {
                     // User is signed in
                     //startActivity(new Intent(SignInActivity.this, MainActivity.class));
-                    Toast.makeText(SignInActivity.this, "signed in", Toast.LENGTH_SHORT).show();
-
                 } else {
                     // User is signed out
                     //startActivity(new Intent(SignInActivity.this, SignInActivity.class));
-                    Toast.makeText(SignInActivity.this, "signed out", Toast.LENGTH_SHORT).show();
                 }
-
             }
         };
 
