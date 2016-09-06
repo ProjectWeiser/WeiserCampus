@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/bb1"
+        icon="@drawable/ic_near_me"
+        title="Places"
+        inActiveColor="@color/mat_grey_300"
+        activeColor="@color/mat_grey_50"
+        barColorWhenSelected="@color/mat_grey_800"/>
+    <tab
+        id="@+id/bb2"
+        icon="@drawable/ic_group"
+        title="Groups"
+        inActiveColor="@color/mat_grey_300"
+        activeColor="@color/mat_grey_50"
+        barColorWhenSelected="@color/mat_grey_800"/>
+    <tab
+        id="@+id/bb3"
+        icon="@drawable/ic_event"
+        title="Events"
+        inActiveColor="@color/mat_grey_300"
+        activeColor="@color/mat_grey_50"
+        barColorWhenSelected="@color/mat_grey_800"/>
+    <tab
+        id="@+id/bb4"
+        icon="@drawable/ic_account_circle"
+        title="Profile"
+        inActiveColor="@color/mat_grey_300"
+        activeColor="@color/mat_grey_50"
+        barColorWhenSelected="@color/mat_grey_800"/>
+    <tab
+        id="@+id/bb5"
+        icon="@drawable/ic_more_horiz"
+        title="More"
+        inActiveColor="@color/mat_grey_300"
+        activeColor="@color/mat_grey_50"
+        barColorWhenSelected="@color/mat_grey_800"/>
+</tabs>
